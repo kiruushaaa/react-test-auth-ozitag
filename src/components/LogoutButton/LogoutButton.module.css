@@ -1,0 +1,15 @@
+.logoutButton {
+  cursor: pointer;
+
+  color: #fff;
+  background-color: teal;
+
+  font-size: 18px;
+  max-width: 124px;
+
+  border: none;
+  border-radius: 7px;
+
+  margin: 0;
+  padding: 8px;
+}

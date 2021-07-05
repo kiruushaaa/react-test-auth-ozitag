@@ -1,0 +1,29 @@
+.form {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 20px;
+}
+
+.inputField {
+  max-width: 286px;
+}
+
+.submitButton {
+  cursor: pointer;
+
+  color: #fff;
+  background-color: blueviolet;
+
+  font-size: 18px;
+  max-width: 124px;
+
+  border: none;
+  border-radius: 7px;
+
+  margin: 0;
+  padding: 8px;
+}
+
+.errorMessage {
+  color: crimson;
+}
