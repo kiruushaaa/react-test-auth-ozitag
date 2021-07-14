@@ -24,6 +24,11 @@
   padding: 8px;
 }
 
+.submitButton:disabled {
+  background-color: #e5e5e5;
+  opacity: 0.8;
+}
+
 .errorMessage {
   color: crimson;
 }

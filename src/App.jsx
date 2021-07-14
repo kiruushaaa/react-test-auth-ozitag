@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import MainContainer from './components/MainContainer/MainContainer';
 import UserPage from './components/UserPage';
 import LoginForm from './components/LoginForm/LoginForm';
-import { useData } from './store/DataContext';
+import { getFromLocalStorage } from './redux/reducers/authReducer';
 
 const App = () => {
-  const { data } = useData();
+  const auth = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getFromLocalStorage());
+  }, [dispatch]);
 
   return (
     <div className='App'>
       <MainContainer>
-        {data.isAuthorized ? <UserPage /> : <LoginForm />}
+        {auth.isAuthorized ? <UserPage /> : <LoginForm />}
       </MainContainer>
     </div>
   );

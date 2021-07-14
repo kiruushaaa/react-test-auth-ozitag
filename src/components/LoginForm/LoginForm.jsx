@@ -1,12 +1,17 @@
-import React from 'react';
-import s from './LoginForm.module.css';
-import { useData } from '../../store/DataContext';
+import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
-import { getAuthToken, getUserProfile } from '../../api/userAPI';
+import { useDispatch, useSelector } from 'react-redux';
+import s from './LoginForm.module.css';
 import validationSchema from './validationSchema';
+import { fetchAuthData } from '../../redux/reducers/authReducer';
 
 const LoginForm = () => {
-  const { setValues } = useData();
+  const authData = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = 'Login page';
+  }, []);
 
   const { handleSubmit, handleChange, values, touched, errors } = useFormik({
     initialValues: {
@@ -15,22 +20,18 @@ const LoginForm = () => {
     },
     validationSchema,
     onSubmit: async (values, { setSubmitting, setFieldError }) => {
-      const authData = await getAuthToken(values);
+      const responce = await dispatch(fetchAuthData(values));
 
-      if (authData.message) {
-        console.error(authData.message);
+      if (responce.payload.message) {
+        const { message, errors } = responce.payload;
 
-        for (let key in authData.errors) {
-          setFieldError(
-            authData.errors[key].fieldName,
-            authData.errors[key].message
-          );
-        }
-      } else {
-        const userData = await getUserProfile(authData.data.accessToken);
-        setValues({ isAuthorized: true, ...userData.data }); // this is better to delegate to reducer, but we don't have the last one
-        setSubmitting(false);
+        console.warn(message);
+        Object.keys(errors).forEach(key => {
+          setFieldError(errors[key].fieldName, errors[key].message);
+        });
       }
+
+      setSubmitting(false);
     },
   });
 
@@ -61,7 +62,10 @@ const LoginForm = () => {
       {touched.password && errors.password && (
         <div className={s.errorMessage}>{errors.password}</div>
       )}
-      <button className={s.submitButton} type='submit'>
+      <button
+        className={s.submitButton}
+        type='submit'
+        disabled={authData.isFetching}>
         Log In
       </button>
     </form>
